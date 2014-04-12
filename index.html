@@ -1,1 +1,23 @@
-index.html
+<html>
+  <head>
+    <script src="http://cdn.firebase.com/js/client/1.0.6/firebase.js"></script>
+    <script>
+      var Refs = new Firebase('https://y1dzhuuj.firebaseio.com/');
+
+      // すでに存在するデータを取得する
+      Refs.once('value', function(dataSnapShot){
+        var aaa = dataSnapShot.val();
+        console.log(aaa);
+      });
+
+      //　データが追加されるたびにデータを表示する
+      // Refs.on('child_added', function(dataSnapShot)) {
+      //   var aaa = dataSnapShot.val();
+      //   console.log(aaa);
+      // };
+    </script>
+  </head>
+  <body>
+    <h1>EMOTION HELTH GRAPH</h1>
+  </body>
+</html>
