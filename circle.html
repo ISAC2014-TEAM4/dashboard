@@ -52,7 +52,14 @@
     var astronauts = {};
     var connections = {};
 
-    function drawEmotions(astronaut_key) {
+    function drawEmotions(data) {
+      circleChart1.drawData( data, "happy", "#FFF01F" );
+      circleChart2.drawData( data, "surprised", "#FFA63F"  );
+      circleChart3.drawData( data, "sad", "#1FC2FF"  );
+      circleChart4.drawData( data, "angry", "#FF7F96"  );
+    }
+
+    function update(astronaut_key) {
 
       var AstronautsQuery = Refs.child('astronauts/' + astronaut_key).limit(30);
       AstronautsQuery.once('value', function(_dataSnapShot){
@@ -62,24 +69,19 @@
         // dataの形式はArrayにする必要がある
         for (emotion_key in value.history) {
           if (Date.now() - value.history[emotion_key].timestamp < 60 * 1000) {
+            console.log(Date.now() - value.history[emotion_key].timestamp);
             data.push(value.history[emotion_key]);
           }
         }
 
-        circleChart1.drawData( data, "happy", "#FF0000" );
-        circleChart2.drawData( data, "surprised", "#FF3300"  );
-        circleChart3.drawData( data, "sad", "#FF6600"  );
-        circleChart4.drawData( data, "angry", "#FF9900"  );
+        drawEmotions(data);
 
         // すでに存在するデータを取得する
         Refs.child('astronauts/' + astronaut_key + '/history').on('child_added', function(_dataSnapShot){
           var value = _dataSnapShot.val();
           data.push(value);
 
-          // circleChart1.drawData( data, "happy", "#FF0000" );
-          // circleChart2.drawData( data, "surprised", "#FF3300"  );
-          // circleChart3.drawData( data, "sad", "#FF6600"  );
-          // circleChart4.drawData( data, "angry", "#FF9900"  );
+          drawEmotions(data);
         });
       });
     }
@@ -106,7 +108,7 @@
     $('#astronaut-list').on('click', function(e) {
       var astronaut_key = $(e.target).html();
       // resetEmotions();
-      drawEmotions(astronaut_key);
+      update(astronaut_key);
     });
   </script>
 </body>

@@ -7,8 +7,8 @@ emotionalHealth.circlechart = function module() {
   var dispatch = d3.dispatch('histReady');
 
   function exports(_selection) {
-      svg = svg || _selection,
-      svg.datum([]);
+    svg = svg || _selection,
+    svg.datum([]);
   };
 
   exports.drawData = function( _data, _emotion, _color) {
@@ -38,20 +38,19 @@ emotionalHealth.circlechart = function module() {
           rScale.domain(d3.extent(_data, function(d) { return d.angry; }));
       }
 
-      svg.selectAll(".dot")
-          .data(_data)
-        .enter().append("circle")
+      var circles = svg.selectAll(".dot").data( _data );
+
+      circles.enter()
+          .append("circle")
           .attr("class", "dot")
           .attr("r", function(d) {
-            if ( _emotion = "happy") {
-              console.log(_emotion);
+            if ( _emotion === "happy") {
               return rScale(d.happy);
-            } else if ( _emotion = "surprised") {
-              console.log(_emotion);
+            } else if ( _emotion === "surprised") {
               return rScale(d.surprised);
-            } else if ( _emotion = "sad") {
+            } else if ( _emotion === "sad") {
               return rScale(d.sad);
-            } else if ( _emotion = "angry") {
+            } else if ( _emotion === "angry") {
               return rScale(d.angry);
             };
           })
@@ -61,6 +60,56 @@ emotionalHealth.circlechart = function module() {
           .attr("cy", 100 )
           .style("fill", _color)
           .style("fill-opacity", 0.05 );  
+
+      circles.transition()
+        .duration(500)
+        .attr("class", "dot")
+          .attr("r", function(d) {
+            if ( _emotion === "happy") {
+              return rScale(d.happy);
+            } else if ( _emotion === "surprised") {
+              return rScale(d.surprised);
+            } else if ( _emotion === "sad") {
+              return rScale(d.sad);
+            } else if ( _emotion === "angry") {
+              return rScale(d.angry);
+            };
+          })
+          .attr("cx", function(d) {
+            return xScale(d.timestamp)
+          })
+          .attr("cy", 100 )
+          .style("fill", _color)
+          .style("fill-opacity", 0.05 );  
+
+      circles.exit()
+        .transition()
+        .duration(500)
+        .remove();
+
+      // svg.selectAll(".dot")
+      //     .data(_data)
+      //   .enter().append("circle")
+      //     .attr("class", "dot")
+      //     .attr("r", function(d) {
+      //       if ( _emotion == "happy") {
+      //         console.log(_emotion);
+      //         return rScale(d.happy);
+      //       } else if ( _emotion == "surprised") {
+      //         console.log(_emotion);
+      //         return rScale(d.surprised);
+      //       } else if ( _emotion == "sad") {
+      //         return rScale(d.sad);
+      //       } else if ( _emotion == "angry") {
+      //         return rScale(d.angry);
+      //       };
+      //     })
+      //     .attr("cx", function(d) { 
+      //       return xScale(d.timestamp)
+      //     })
+      //     .attr("cy", 100 )
+      //     .style("fill", _color)
+      //     .style("fill-opacity", 0.05 );  
   }
 
   dispatch.histReady();
