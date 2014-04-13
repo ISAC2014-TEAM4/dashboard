@@ -6,10 +6,11 @@
     <title></title>
     <script src="http://cdn.firebase.com/js/client/1.0.6/firebase.js"></script>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
   </head>
   <body>
-
   <div id="container">
+    <ul class="box" id="astronaut-list"></ul>
 
     <h2>Happy chart</h2>
     <div id="happy-chart"></div>
@@ -25,54 +26,76 @@
   </div>
       
   <script src="script.js"></script>
-
   <script>
-  /* ------------------
-    initialise
-  ------------------ */
+    /* ------------------
+      initialise
+    ------------------ */
 
-  var circleChart1 = emotionalHealth.circlechart();
-  var circleChart2 = emotionalHealth.circlechart();
-  var circleChart3 = emotionalHealth.circlechart();
-  var circleChart4 = emotionalHealth.circlechart();
+    var circleChart1 = emotionalHealth.circlechart();
+    var circleChart2 = emotionalHealth.circlechart();
+    var circleChart3 = emotionalHealth.circlechart();
+    var circleChart4 = emotionalHealth.circlechart();
 
-  d3.select('#happy-chart').append('svg').attr('width', 960).attr('height', 200).call(circleChart1);
-  d3.select('#surprised-chart').append('svg').attr('width', 960).attr('height', 200).call(circleChart2);
-  d3.select('#sad-chart').append('svg').attr('width', 960).attr('height', 200).call(circleChart3);
-  d3.select('#angry-chart').append('svg').attr('width', 960).attr('height', 200).call(circleChart4);
+    d3.select('#happy-chart').append('svg').attr('width', 960).attr('height', 200).call(circleChart1);
+    d3.select('#surprised-chart').append('svg').attr('width', 960).attr('height', 200).call(circleChart2);
+    d3.select('#sad-chart').append('svg').attr('width', 960).attr('height', 200).call(circleChart3);
+    d3.select('#angry-chart').append('svg').attr('width', 960).attr('height', 200).call(circleChart4);
 
 
-  /* ------------------
-    load & draw data
-  ------------------ */
+    /* ------------------
+      load & draw data
+    ------------------ */
 
     // Firebaseへのコネクション
     var Refs = new Firebase('https://y1dzhuuj.firebaseio.com/');
 
-    // すでに存在するデータを取得する
-    Refs.once('value', function(_dataSnapShot){
+    var astronauts = {};
+    var connections = {};
 
-      var value = _dataSnapShot.val();
-
-      for (astronaut_key in value.astronauts) {
-        var astronaut =  value.astronauts[astronaut_key];
+    function drawEmotions(astronaut_key) {
+      Refs.child('astronauts/' + astronaut_key).once('value', function(_dataSnapShot){
+        var value = _dataSnapShot.val();
         var data = [];
 
         // dataの形式はArrayにする必要がある
-        for (emotion_key in astronaut.history) {
-          data.push(astronaut.history[emotion_key]);
+        for (emotion_key in value.history) {
+          data.push(value.history[emotion_key]);
         }
 
-      }
-
-        //console.log(data)
         circleChart1.drawData( data, "happy", "#FF0000" );
         circleChart2.drawData( data, "surprised", "#FF3300"  );
         circleChart3.drawData( data, "sad", "#FF6600"  );
         circleChart4.drawData( data, "angry", "#FF9900"  );
 
-   });
+        // すでに存在するデータを取得する
+        Refs.child('astronauts/' + astronaut_key + '/history').on('child_added', function(_dataSnapShot){
+          var value = _dataSnapShot.val();
+          data.push(value);
 
+          circleChart1.drawData( data, "happy", "#FF0000" );
+          circleChart2.drawData( data, "surprised", "#FF3300"  );
+          circleChart3.drawData( data, "sad", "#FF6600"  );
+          circleChart4.drawData( data, "angry", "#FF9900"  );
+        });
+      });
+
+    }
+    
+    Refs.child('connections').on('value', function(_dataSnapShot){
+      var connections = _dataSnapShot.val();
+      console.log(connections);
+      for (astronaut_key in connections) {
+        $astronaut = $('<li/>', {
+          text: astronaut_key
+        });
+        $('#astronaut-list').append($astronaut);
+      }
+    });
+
+    $('#astronaut-list').on('click', function(e) {
+      var astronaut_key = $(e.target).html();
+      drawEmotions(astronaut_key);
+    });
   </script>
 </body>
 </html>

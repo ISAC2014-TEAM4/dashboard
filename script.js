@@ -12,7 +12,6 @@ emotionalHealth.circlechart = function module() {
   };
 
   exports.drawData = function( _data, _emotion, _color) {
-
       var margin = {top: 20, right: 20, bottom: 20, left: 20},
         width = 960 - margin.left - margin.right,
         height = 300 - margin.top - margin.bottom;
@@ -42,17 +41,15 @@ emotionalHealth.circlechart = function module() {
         .enter().append("circle")
           .attr("class", "dot")
           .attr("r", function(d) {
-
-              if ( _emotion = "happy") {
-                  return rScale(d.happy)
-              } else if ( _emotion = "surprised") {
-                  return rScale(d.surprised);
-              } else if ( _emotion = "sad") {
-                  return rScale(d.sad);
-              } else if ( _emotion = "angry") {
-                  return rScale(d.angry);
-              };
-              
+            if ( _emotion = "happy") {
+              return rScale(d.happy);
+            } else if ( _emotion = "surprised") {
+              return rScale(d.surprised);
+            } else if ( _emotion = "sad") {
+              return rScale(d.sad);
+            } else if ( _emotion = "angry") {
+              return rScale(d.angry);
+            };
           })
           .attr("cx", function(d) { return xScale(d.timestamp) })
           .attr("cy", 100 )
