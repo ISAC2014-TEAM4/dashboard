@@ -1,0 +1,116 @@
+
+body {
+	background-color: #f3f2e7;	
+}
+
+#whole {
+	width: 960px;
+	min-height: 800px;
+	margin: 0 auto;
+	background-color: #FFF;
+}
+
+#head {
+	width: 960px;
+	height: 186px;
+	background-image: url('interface.png') no-repeat;
+}
+
+#logo {
+	padding-left: 50px;
+	padding-top: 60px;	
+	float: left;
+}
+
+#selected_face {
+
+	width: 60px;
+	height: 60px;
+	padding-top: 60px;
+	margin: 0 auto;
+}
+
+#menu_view {
+	margin: 0 auto;
+}
+
+h1 {
+	text-align: center;
+	color: #FFF;	
+}
+
+.selected {
+  opacity: 0.4;
+  -moz-opacity:0.4;
+  -khtml-opacity: 0.4;
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+  filter: alpha(opacity=40);
+}
+
+
+
+#chart1,
+#chart2,
+#chart3 {
+	width: 960px;
+	height: 400px;
+	margin-bottom: 10px;
+}
+
+#menu_view,
+#menu_iss,
+#menu_ppl {
+	width: 500px;
+	height: 60px;
+	clear: both;
+	margin-bottom: 5px;
+	background-color: #FFF;	
+}
+
+#menu_view li {
+	float: left;
+	display: block;
+	margin-right: 10px;
+	width: 100px;
+	height: 20px;
+	background-color: #DDD;
+}
+
+#menu_iss li,
+#menu_ppl li {
+	float: left;
+	display: block;
+	margin-right: 10px;
+	width: 85px;
+	height: 85px;
+	background-color: #DDD;
+}
+
+#interface {
+	width: 960px;
+	height: 290px;		
+}
+
+
+
+/* @group Graph */
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    .x.axis path {
+      display: none;
+    }
+
+    .line {
+      fill: none;
+      stroke: steelblue;
+      stroke-width: 1.5px;
+    }
+
+/* @end */
+
