@@ -24,7 +24,9 @@ emotionalHealth.circlechart = function module() {
       var rScale = d3.scale.linear()
           .range([0, 60]);
 
-      xScale.domain(d3.extent(_data, function(d) { return d.timestamp; }));
+      xScale.domain(d3.extent(_data, function(d) {
+        return d.timestamp;
+     }));
 
       if ( _emotion === "happy") {
           rScale.domain(d3.extent(_data, function(d) { return d.happy; }));
@@ -42,8 +44,10 @@ emotionalHealth.circlechart = function module() {
           .attr("class", "dot")
           .attr("r", function(d) {
             if ( _emotion = "happy") {
+              console.log(_emotion);
               return rScale(d.happy);
             } else if ( _emotion = "surprised") {
+              console.log(_emotion);
               return rScale(d.surprised);
             } else if ( _emotion = "sad") {
               return rScale(d.sad);
@@ -51,11 +55,12 @@ emotionalHealth.circlechart = function module() {
               return rScale(d.angry);
             };
           })
-          .attr("cx", function(d) { return xScale(d.timestamp) })
+          .attr("cx", function(d) { 
+            return xScale(d.timestamp)
+          })
           .attr("cy", 100 )
           .style("fill", _color)
           .style("fill-opacity", 0.05 );  
-
   }
 
   dispatch.histReady();

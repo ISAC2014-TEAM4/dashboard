@@ -53,13 +53,17 @@
     var connections = {};
 
     function drawEmotions(astronaut_key) {
-      Refs.child('astronauts/' + astronaut_key).once('value', function(_dataSnapShot){
+
+      var AstronautsQuery = Refs.child('astronauts/' + astronaut_key).limit(30);
+      AstronautsQuery.once('value', function(_dataSnapShot){
         var value = _dataSnapShot.val();
         var data = [];
 
         // dataの形式はArrayにする必要がある
         for (emotion_key in value.history) {
-          data.push(value.history[emotion_key]);
+          if (Date.now() - value.history[emotion_key].timestamp < 60 * 1000) {
+            data.push(value.history[emotion_key]);
+          }
         }
 
         circleChart1.drawData( data, "happy", "#FF0000" );
@@ -72,15 +76,22 @@
           var value = _dataSnapShot.val();
           data.push(value);
 
-          circleChart1.drawData( data, "happy", "#FF0000" );
-          circleChart2.drawData( data, "surprised", "#FF3300"  );
-          circleChart3.drawData( data, "sad", "#FF6600"  );
-          circleChart4.drawData( data, "angry", "#FF9900"  );
+          // circleChart1.drawData( data, "happy", "#FF0000" );
+          // circleChart2.drawData( data, "surprised", "#FF3300"  );
+          // circleChart3.drawData( data, "sad", "#FF6600"  );
+          // circleChart4.drawData( data, "angry", "#FF9900"  );
         });
       });
-
     }
-    
+
+    function resetEmotions(){
+      d3.select('#happy-chart').html("");
+      d3.select('#surprised-chart').html("");
+      d3.select('#sad-chart').html("");
+      d3.select('#angry-chart').html("");
+    }
+
+    // いま、顔認識をしているユーザーを表示
     Refs.child('connections').on('value', function(_dataSnapShot){
       var connections = _dataSnapShot.val();
       console.log(connections);
@@ -94,6 +105,7 @@
 
     $('#astronaut-list').on('click', function(e) {
       var astronaut_key = $(e.target).html();
+      // resetEmotions();
       drawEmotions(astronaut_key);
     });
   </script>
