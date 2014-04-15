@@ -17,6 +17,93 @@ $(function (){
           $("#chart2").hide();
           $("#chart3").hide();
           console.log("#view1");
+          drawCircleChart();
+      }
+
+      function drawCircleChart() {
+        /* ------------------
+          initialise
+        ------------------ */
+
+        var circleChart1 = emotionalHealth.circlechart();
+        var circleChart2 = emotionalHealth.circlechart();
+        var circleChart3 = emotionalHealth.circlechart();
+        var circleChart4 = emotionalHealth.circlechart();
+
+        d3.select('#happy-chart').append('svg').attr('width', 960).attr('height', 200).call(circleChart1);
+        d3.select('#surprised-chart').append('svg').attr('width', 960).attr('height', 200).call(circleChart2);
+        d3.select('#sad-chart').append('svg').attr('width', 960).attr('height', 200).call(circleChart3);
+        d3.select('#angry-chart').append('svg').attr('width', 960).attr('height', 200).call(circleChart4);
+
+
+        /* ------------------
+          load & draw data
+        ------------------ */
+
+        // Firebaseへのコネクション
+        var Refs = new Firebase('https://y1dzhuuj.firebaseio.com/');
+
+        var astronauts = {};
+        var connections = {};
+
+        function drawEmotions(data) {
+          circleChart1.drawData( data, "happy", "#FFF01F" );
+          circleChart2.drawData( data, "surprised", "#FFA63F"  );
+          circleChart3.drawData( data, "sad", "#1FC2FF"  );
+          circleChart4.drawData( data, "angry", "#FF7F96"  );
+        }
+
+        function update(astronaut_key) {
+
+          var AstronautsQuery = Refs.child('astronauts/' + astronaut_key).limit(30);
+          AstronautsQuery.once('value', function(_dataSnapShot){
+            var value = _dataSnapShot.val();
+            var data = [];
+
+            // dataの形式はArrayにする必要がある
+            for (emotion_key in value.history) {
+              if (Date.now() - value.history[emotion_key].timestamp < 60 * 1000) {
+                console.log(Date.now() - value.history[emotion_key].timestamp);
+                data.push(value.history[emotion_key]);
+              }
+            }
+
+            drawEmotions(data);
+
+            // すでに存在するデータを取得する
+            Refs.child('astronauts/' + astronaut_key + '/history').on('child_added', function(_dataSnapShot){
+              var value = _dataSnapShot.val();
+              data.push(value);
+
+              drawEmotions(data);
+            });
+          });
+        }
+
+        function resetEmotions(){
+          d3.select('#happy-chart').html("");
+          d3.select('#surprised-chart').html("");
+          d3.select('#sad-chart').html("");
+          d3.select('#angry-chart').html("");
+        }
+
+        // いま、顔認識をしているユーザーを表示
+        Refs.child('connections').on('value', function(_dataSnapShot){
+          var connections = _dataSnapShot.val();
+          console.log(connections);
+          for (astronaut_key in connections) {
+            $astronaut = $('<li/>', {
+              text: astronaut_key
+            });
+            $('#astronaut-list').append($astronaut);
+          }
+        });
+
+        $('#astronaut-list').on('click', function(e) {
+          var astronaut_key = $(e.target).html();
+          // resetEmotions();
+          update(astronaut_key);
+        });
       }
 
       function drawLineChart() {

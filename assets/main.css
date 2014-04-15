@@ -1,4 +1,3 @@
-
 body {
 	background-color: #f3f2e7;	
 }
@@ -11,6 +10,8 @@ body {
 }
 
 #head {
+  position: relative;
+
 	width: 960px;
 	height: 186px;
 	background-image: url('interface.png') no-repeat;
@@ -47,13 +48,20 @@ h1 {
   filter: alpha(opacity=40);
 }
 
+h2 {
+  font-weight: bold;
+  text-align: center;
+}
 
+#chart_area {
+  position: relative;
+}
 
 #chart1,
 #chart2,
 #chart3 {
 	width: 960px;
-	height: 400px;
+	height: 850px;
 	margin-bottom: 10px;
 }
 
@@ -92,6 +100,11 @@ h1 {
 }
 
 
+.facetrack-link {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
 
 /* @group Graph */
 
