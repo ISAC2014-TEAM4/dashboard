@@ -59,7 +59,7 @@ emotionalHealth.circlechart = function module() {
           })
           .attr("cy", 100 )
           .style("fill", _color)
-          .style("fill-opacity", 0.05 );  
+          .style("fill-opacity", 0.2 );  
 
       circles.transition()
         .duration(500)
@@ -80,7 +80,7 @@ emotionalHealth.circlechart = function module() {
           })
           .attr("cy", 100 )
           .style("fill", _color)
-          .style("fill-opacity", 0.05 );  
+          .style("fill-opacity", 0.2 );  
 
       circles.exit()
         .transition()
